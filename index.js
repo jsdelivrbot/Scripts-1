@@ -66,6 +66,8 @@ Twitter.get('search/tweets',params, gotData);
 function gotData(err,data,response){
 
 twitterText.length = 0;
+twitterUserURL.length=0;
+twitterUser.length=0;
 	for (var i = 0; i < data.statuses.length; i++) {
 	twitterText.push(data.statuses[i].text);
 	twitterUser.push(data.statuses[i].user.name);
