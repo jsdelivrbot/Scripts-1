@@ -4,5 +4,9 @@
 
 
 .fg1{
-   margin:4%;
+  margin:5% 0% 5% 0%;
+}
+
+.form-inline{
+	margin-left: 40%;
 }
