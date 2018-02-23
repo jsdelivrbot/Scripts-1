@@ -3,10 +3,18 @@
   <head>
     <meta charset="utf-8">
     <title>Test</title>
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="css/mdb.min.css" rel="stylesheet">
+        <link href="css/mdbx.min.css" rel="stylesheet">
 
+    <!-- Your custom styles (optional) -->
+    <link href="css/style.css" rel="stylesheet">
   </head>
   <body>
     <div class="container">
@@ -24,25 +32,68 @@
         </div>
         </div>
         </form>
-
+ </fieldset>
  <% if(tweets !== null){ %>
  <h1 class="keyword">Displaying <%= count %> tweets with keyword "<%= keyword %>"</h1>
- <ul>
- <% for (var i = 0; i < tweets.length; i++) { %>
-           <li class="list-group-item list-group-item-action"><%= tweets[i] %></li>
-               <% } %>
+            <div class="row">
 
-        </ul>
+ <% for (var i = 0; i <= tweets.length; i++) { %>
+
+                <!--Grid column-->
+                <div class="col-md-4 mb-4">
+
+                    <!--Card-->
+                    <div class="card testimonial-card">
+
+                        <!--Bacground color-->
+                        <div class="card-up indigo lighten-1">
+                        </div>
+
+                        <!--Avatar-->
+                        <div class="avatar mx-auto white">
+                            <img src="<%= twitterUserURL[i] %>" class="rounded-circle">
+                        </div>
+
+                        <div class="card-body">
+                            <!--Name-->
+                            <h4 class="card-title"><%= twitterUser[i] %></h4>
+                            <hr>
+                            <!--Quotation-->
+                            <p>
+                                <i class="fa fa-quote-left"></i> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos, adipisci</p>
+                        </div>
+
+                    </div>
+                    <!--/.Card-->
+
+                </div>
+                <!--Grid column-->
+
+                
+
+               <% } %>
+            </div>
+
+        
         <% } %>
 
-      </fieldset>
+     
     </div>
 
 
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<!-- SCRIPTS -->
+    <!-- JQuery -->
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="js/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="js/mdb.min.js"></script>
+
+
+
 
   </body>
 </html>

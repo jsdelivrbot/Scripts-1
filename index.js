@@ -18,6 +18,8 @@ var twit = require('twit'),
 
 var Twitter = new twit(config);
 var twitterText = [];
+var twitterUser = [];
+var twitterUserURL =[];
 var keyword= null;
 var rsx=[];
 
@@ -65,11 +67,14 @@ function gotData(err,data,response){
 
 twitterText.length = 0;
 	for (var i = 0; i < data.statuses.length; i++) {
-	twitterText.push ( data.statuses[i].text);
+	twitterText.push(data.statuses[i].text);
+	twitterUser.push(data.statuses[i].user.name);
+	twitterUserURL.push(data.statuses[i].user.profile_image_url_https);
+	
 };
 
 //rendering results in index.ejs
-	res.render('index', {tweets: twitterText, keyword:params.q , count:params.count , error: null});
+	res.render('index', {tweets: twitterText, keyword:params.q , count:params.count ,twitterUser:twitterUser, twitterUserURL:twitterUserURL, error: null});
 
 
 }   
