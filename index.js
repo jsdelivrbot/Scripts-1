@@ -19,21 +19,31 @@ var twit = require('twit'),
 
 var Twitter = new twit(config);
 var twitterText = [];
+var city= null;
+var rsx=[];
 
 //finding a tweet by keyword function
-function getTweets(city){
+var params = {
+    q: 'hello',
+	count: 2
+}
 
 
-// find latest tweet according the query 'q' in params
-Twitter.get('search/tweets', { q: ( city + ' since:2017-07-11'), count: 10 }, function(err, data, response) {
+//Twitter.get('search/tweets',params, gotData);
+
+function gotData(err,data,response){
+
 twitterText.length = 0;
 	for (var i = 0; i < data.statuses.length; i++) {
 	twitterText.push ( data.statuses[i].text);
+	console.log(twitterText[i]);
 };
 
-}) 
 
-		return twitterText;
+	return twitterText;
+
+
+
 }
 
 
@@ -54,24 +64,52 @@ app.get('/', function (req, res) {
 
 //POST function !!!!!WARNING!!!!!
 app.post('/' , function(req, res){
-	  var city = req.body.city;
-var rsx=getTweets(city);
-
-     
-
-       
-        res.render('index', {tweets: rsx, error: null});
-       
 
 
+var params = {
+    q: 'hello',
+	count: 2
+}
 
+	console.log('city: ' + params.q );
 
-//res.render('index', {weather: tText[1], error: null});
+	 params.q = req.body.city;
 
+	console.log('city: ' + params.q );
 
 
 
 
+
+
+
+
+Twitter.get('search/tweets',params, gotData);
+
+function gotData(err,data,response){
+
+twitterText.length = 0;
+	for (var i = 0; i < data.statuses.length; i++) {
+	twitterText.push ( data.statuses[i].text);
+	console.log(twitterText[i]);
+};
+
+
+	res.render('index', {tweets: twitterText, city:params.q , error: null});
+
+
+
+}
+
+
+
+
+
+
+
+	console.log('ttt: '+ twitterText);
+
+	//    
 })
  
 
