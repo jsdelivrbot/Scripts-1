@@ -13,7 +13,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs')
 
 //seting up Twit
-
 var twit = require('twit'),
  config = require('./config');
 
@@ -22,29 +21,13 @@ var twitterText = [];
 var city= null;
 var rsx=[];
 
-//finding a tweet by keyword function
+//declaring the searching parameters
 var params = {
     q: 'hello',
 	count: 2
 }
 
 
-//Twitter.get('search/tweets',params, gotData);
-
-function gotData(err,data,response){
-
-twitterText.length = 0;
-	for (var i = 0; i < data.statuses.length; i++) {
-	twitterText.push ( data.statuses[i].text);
-	console.log(twitterText[i]);
-};
-
-
-	return twitterText;
-
-
-
-}
 
 
 
@@ -62,7 +45,7 @@ app.get('/', function (req, res) {
 
 
 
-//POST function !!!!!WARNING!!!!!
+//POST function 
 app.post('/' , function(req, res){
 
 
@@ -71,19 +54,11 @@ var params = {
 	count: 2
 }
 
-	console.log('city: ' + params.q );
-
 	 params.q = req.body.city;
-
-	console.log('city: ' + params.q );
-
+     params.count = req.body.numberoftweets;
 
 
-
-
-
-
-
+//twitter search function
 Twitter.get('search/tweets',params, gotData);
 
 function gotData(err,data,response){
@@ -91,25 +66,13 @@ function gotData(err,data,response){
 twitterText.length = 0;
 	for (var i = 0; i < data.statuses.length; i++) {
 	twitterText.push ( data.statuses[i].text);
-	console.log(twitterText[i]);
 };
 
-
+//rendering results in index.ejs
 	res.render('index', {tweets: twitterText, city:params.q , error: null});
 
 
-
-}
-
-
-
-
-
-
-
-	console.log('ttt: '+ twitterText);
-
-	//    
+}   
 })
  
 
@@ -118,3 +81,6 @@ twitterText.length = 0;
 app.listen(3001, function () {
   console.log(' app listening on port 3001!')
 })
+
+
+//v 0.0.0.4
