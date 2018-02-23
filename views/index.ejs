@@ -15,7 +15,7 @@
 
            <div class="row fg1">
             <div clas="col align-self-end">
-          <input name="city" type="text" class="form-control" placeholder="Enter a KeyWord" required>
+          <input name="keyword" type="text" class="form-control" placeholder="Enter a KeyWord" required>
               <input name="numberoftweets" class="form-control" type="number" value="10" id="example-number-input">
 
          
@@ -26,7 +26,7 @@
         </form>
 
  <% if(tweets !== null){ %>
- <h1><%= city %></h1>
+ <h1 class="keyword">Displaying <%= count %> tweets with keyword "<%= keyword %>"</h1>
  <ul>
  <% for (var i = 0; i < tweets.length; i++) { %>
            <li class="list-group-item list-group-item-action"><%= tweets[i] %></li>

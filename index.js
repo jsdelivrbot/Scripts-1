@@ -18,7 +18,7 @@ var twit = require('twit'),
 
 var Twitter = new twit(config);
 var twitterText = [];
-var city= null;
+var keyword= null;
 var rsx=[];
 
 //declaring the searching parameters
@@ -54,7 +54,7 @@ var params = {
 	count: 2
 }
 
-	 params.q = req.body.city;
+	 params.q = req.body.keyword;
      params.count = req.body.numberoftweets;
 
 
@@ -69,7 +69,7 @@ twitterText.length = 0;
 };
 
 //rendering results in index.ejs
-	res.render('index', {tweets: twitterText, city:params.q , error: null});
+	res.render('index', {tweets: twitterText, keyword:params.q , count:params.count , error: null});
 
 
 }   
@@ -83,4 +83,4 @@ app.listen(3001, function () {
 })
 
 
-//v 0.0.0.4
+//v 0.0.0.
