@@ -4,7 +4,7 @@
 
 
 .fg1{
-  margin:5% 0% 5% 0%;
+
 }
 
 .form-inline{
@@ -13,4 +13,8 @@
 
 .keyword{
 	text-align: center;
+}
+
+.main-page{
+	margin-top: 10%;
 }

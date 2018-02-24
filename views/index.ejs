@@ -17,21 +17,12 @@
     <link href="css/style.css" rel="stylesheet">
   </head>
   <body>
-    <div class="container">
+
+<% include navbar %>
+
+    <div class="container main-page">
       <fieldset>
-        <form action="/" class="form-inline" method="post">
-
-           <div class="row fg1">
-            <div clas="col align-self-end">
-          <input name="keyword" type="text" class="form-control" placeholder="Enter a KeyWord" required>
-              <input name="numberoftweets" class="form-control" type="number" value="10" id="example-number-input">
-
-         
-          <input type="submit" class="btn btn-primary getTweetsBtn" value="Get Tweets">
-       
-        </div>
-        </div>
-        </form>
+    
  </fieldset>
  <% if(tweets !== null){ %>
  <h1 class="keyword">Displaying <%= count %> tweets with keyword "<%= keyword %>"</h1>
