@@ -23,6 +23,12 @@ var twitterUserURL =[];
 var keyword= null;
 var rsx=[];
 
+
+var port = process.env.PORT || 8000
+
+
+
+
 //declaring the searching parameters
 var params = {
     q: 'hello',
@@ -85,7 +91,7 @@ twitterUser.length=0;
 
 
 //Running the server
-app.listen(3001, function () {
+app.listen(port, function () {
   console.log(' app listening on port 3001!')
 })
 
