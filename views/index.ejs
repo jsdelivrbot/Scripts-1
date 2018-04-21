@@ -50,8 +50,17 @@
                             <h4 class="card-title"><%= twitterUser[i] %></h4>
                             <hr>
                             <!--Quotation-->
-                            <p>
-                                <i class="fa fa-quote-left"></i> <%= tweets[i] %></p>
+                            <p><i class="fa fa-quote-left"></i> <%= tweets[i] %></p>
+                            <!--EMOTOTION SCORE-->
+                             <% if(twitterSentimentScore[i]<0){ %>
+                                <div class="card pink lighten-2 text-center z-depth-2">
+                                    <% } else{ %> 
+                                 <div class="card info-color text-center z-depth-2">
+                                    <% } %>
+                                    <div class="card-body">
+                                         <p class="white-text mb-0"><%= twitterSentimentScore[i] %></p>
+                                     </div>
+                                </div>
                         </div>
 
                     </div>

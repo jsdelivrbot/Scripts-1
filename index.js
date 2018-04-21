@@ -4,6 +4,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request');
+const sentiment = require('sentiment');
+
 const app = express()
 
 
@@ -20,6 +22,7 @@ var Twitter = new twit(config);
 var twitterText = [];
 var twitterUser = [];
 var twitterUserURL =[];
+var twitterSentimentScore = [];
 var keyword= null;
 var rsx=[];
 
@@ -74,15 +77,19 @@ function gotData(err,data,response){
 twitterText.length = 0;
 twitterUserURL.length=0;
 twitterUser.length=0;
+twitterSentimentScore.length = 0 ;
 	for (var i = 0; i < data.statuses.length; i++) {
+		var snetimentScore = sentiment(data.statuses[i].text);
+		console.log(snetimentScore);
 	twitterText.push(data.statuses[i].text);
+	twitterSentimentScore.push(snetimentScore.score);
 	twitterUser.push(data.statuses[i].user.name);
 	twitterUserURL.push(data.statuses[i].user.profile_image_url_https);
 	
 };
 
 //rendering results in index.ejs
-	res.render('index', {tweets: twitterText, keyword:params.q , count:params.count ,twitterUser:twitterUser, twitterUserURL:twitterUserURL, error: null});
+	res.render('index', {tweets: twitterText, keyword:params.q , count:params.count ,twitterUser:twitterUser, twitterUserURL:twitterUserURL,twitterSentimentScore:twitterSentimentScore, error: null});
 
 
 }   
@@ -92,7 +99,7 @@ twitterUser.length=0;
 
 //Running the server
 app.listen(port, function () {
-  console.log(' app listening on port 3001!')
+  console.log(' app listening on port 8000!')
 })
 
 
