@@ -79,6 +79,7 @@ twitterUserURL.length=0;
 twitterUser.length=0;
 twitterSentimentScore.length = 0 ;
 	for (var i = 0; i < data.statuses.length; i++) {
+		console.log(data)
 		var snetimentScore = sentiment(data.statuses[i].text);
 		console.log(snetimentScore);
 	twitterText.push(data.statuses[i].text);
