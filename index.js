@@ -6,23 +6,32 @@ const bodyParser = require('body-parser');
 const request = require('request');
 const sentiment = require('sentiment');
 const app = express()
-var firebase = require('firebase-admin');
+var firebase = require("firebase-admin");
 
 
 
 
-var config = {
-    apiKey: "AIzaSyCIFo1xJpg-jdSmRK8dCSOUeahJsM1pgaA",
-    authDomain: "sentiment-analisis-twitter.firebaseapp.com",
+
+  var config = {
+    // apiKey: "AIzaSyCIFo1xJpg-jdSmRK8dCSOUeahJsM1pgaA",
+    // authDomain: "sentiment-analisis-twitter.firebaseapp.com",
+    serviceAccount : "./sentiment-analisis-twitter-firebase-adminsdk-i6qim-d7b5b2f868.json",
     databaseURL: "https://sentiment-analisis-twitter.firebaseio.com",
-    projectId: "sentiment-analisis-twitter",
-    storageBucket: "sentiment-analisis-twitter.appspot.com",
-    messagingSenderId: "692009161137"
-  };
-  firebase.initializeApp(config);
+    credential: {
+      getAccessToken: () => ({
+        expires_in: 0,
+        access_token: '',
+      }),
+    }
 
-var ref= firebase.database().ref('sentiment-analisis-twitter');
-var tweetsRef = ref.child('tweets');
+    // projectId: "sentiment-analisis-twitter",
+    // storageBucket: "sentiment-analisis-twitter.appspot.com",
+    // messagingSenderId: "692009161137
+      };
+  firebase.initializeApp(config);
+  console.log(firebase);
+var rootRef = firebase.database().ref().child('sentiment-analisis-twitter');
+var tweetsRef = rootRef.child('tweets');
 
 //setting  up express and ejs 
 app.use(express.static('public'));
@@ -110,14 +119,12 @@ twitterSentimentScore.length = 0 ;
 	for (var i = 0; i < data.statuses.length; i++) {
 		console.log('franc');
 
-		tweetsRef.push({
-				hello:'it works'
-			});
+		
 
 		var snetimentScore = sentiment(data.statuses[i].text);
 		console.log(snetimentScore);
 		if (data.statuses[i].lang === twitterLang) {
-			
+			tweetsRef.push(data.statuses[i]);
 	twitterText.push(data.statuses[i].text);
 	twitterSentimentScore.push(snetimentScore.score);
 	twitterUser.push(data.statuses[i].user.name);
