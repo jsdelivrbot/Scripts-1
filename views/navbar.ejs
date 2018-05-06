@@ -1,4 +1,8 @@
 
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+
 <nav class="navbar navbar-light cyan lighten-1 fixed-top">
     <span class="navbar-brand">"Bazzinga"</span>
 
@@ -6,8 +10,21 @@
 
            <div class="row fg1">
             <div clas="col align-self-end">
-          <input name="keyword" type="text" class="form-control" placeholder="Enter a KeyWord" required>
+          <input name="keyword" type="text" class="form-control" placeholder="Enter ass KeyWord" required>
               <input name="numberoftweets" class="form-control" type="number" value="10" id="example-number-input">
+              <input hidden name="selectLanguageButton" type="text" class="form-control selectLanguageButton" placeholder="Enter ass KeyWord" required>
+
+              <div class="btn-group">
+    <button name="selectLanguageButton" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Choose language</button>
+
+    <div class="dropdown-menu">
+        <a class="dropdown-item" href="#">All languages</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="#">Romanian</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="#">English</a>
+    </div>
+</div>
 
          
           <input type="submit" class="btn btn-primary getTweetsBtn" value="Get Tweets">
@@ -16,3 +33,16 @@
         </div>
         </form>
 </nav>
+<script>
+$(function(){
+  
+  $(".dropdown-menu .dropdown-item").click(function(){
+    
+    $(".dropdown-toggle:first-child").text($(this).text());
+     $(".dropdown-toggle:first-child").val($(this).text());
+     $(".selectLanguageButton:first-child").text($(this).text());
+     $(".selectLanguageButton:first-child").val($(this).text());
+  });
+
+});
+</script>
