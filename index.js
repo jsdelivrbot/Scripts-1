@@ -92,6 +92,7 @@ app.post('/' , function(req, res){
 var params = {
     q: 'hello',
 	count: 2,
+  tweet_mode:'extended'
 	//lang:'en'
 }
 
@@ -118,17 +119,20 @@ twitterUser.length=0;
 twitterSentimentScore.length = 0 ;
 	for (var i = 0; i < data.statuses.length; i++) {
 		console.log('franc');
+         var languageDB = tweetsRef.child(params.q);
 
 		
 
 		var snetimentScore = sentiment(data.statuses[i].text);
-		console.log(snetimentScore);
+		console.log(data.statuses[i]);
+        console.log(twitterLang);
 		if (data.statuses[i].lang === twitterLang) {
-			tweetsRef.push(data.statuses[i]);
-	twitterText.push(data.statuses[i].text);
-	twitterSentimentScore.push(snetimentScore.score);
-	twitterUser.push(data.statuses[i].user.name);
-	twitterUserURL.push(data.statuses[i].user.profile_image_url_https);
+            // if(data.statuses[i].id)
+         languageDB.child(data.statuses[i].id).set(data.statuses[i]);
+	       // twitterText.push(data.statuses[i].text);
+	       // twitterSentimentScore.push(snetimentScore.score);
+	       // twitterUser.push(data.statuses[i].user.name);
+        //    twitterUserURL.push(data.statuses[i].user.profile_image_url_https);
 	}
 };
 
