@@ -30,8 +30,8 @@ var firebase = require("firebase-admin");
       };
   firebase.initializeApp(config);
   console.log(firebase);
-var rootRef = firebase.database().ref().child('sentiment-analisis-twitter');
-var tweetsRef = rootRef.child('tweets');
+// var rootRef = firebase.database().ref().child('sentiment-analisis-twitter');
+var tweetsRef = firebase.database().ref().child('tweets');
 
 //setting  up express and ejs 
 app.use(express.static('public'));
@@ -92,16 +92,19 @@ app.post('/' , function(req, res){
 var params = {
     q: 'hello',
 	count: 2,
-  tweet_mode:'extended'
+  //tweet_mode:'extended'
+
 	//lang:'en'
 }
 
 	 params.q = req.body.keyword;
      params.count = req.body.numberoftweets;
      switch(req.body.selectLanguageButton){
-     	case 'Romanian': twitterLang = 'ro'
+     	case 'Romanian':
+                 twitterLang = 'ro'
      						break;
-     	case 'English' : twitterText = 'en'
+     	case 'English': 
+                twitterLang = 'en'
      						break;
      	default : break;										
 
@@ -113,9 +116,7 @@ Twitter.get('search/tweets',params, gotData);
 
 function gotData(err,data,response){
 
-twitterText.length = 0;
-twitterUserURL.length=0;
-twitterUser.length=0;
+
 twitterSentimentScore.length = 0 ;
 	for (var i = 0; i < data.statuses.length; i++) {
 		console.log('franc');
@@ -124,17 +125,40 @@ twitterSentimentScore.length = 0 ;
 		
 
 		var snetimentScore = sentiment(data.statuses[i].text);
-		console.log(data.statuses[i]);
-        console.log(twitterLang);
+		//console.log(data.statuses[i]);
+       // console.log(twitterLang);
 		if (data.statuses[i].lang === twitterLang) {
             // if(data.statuses[i].id)
          languageDB.child(data.statuses[i].id).set(data.statuses[i]);
-	       // twitterText.push(data.statuses[i].text);
+	       //  twitterText.push(data.statuses[i].text);
 	       // twitterSentimentScore.push(snetimentScore.score);
 	       // twitterUser.push(data.statuses[i].user.name);
-        //    twitterUserURL.push(data.statuses[i].user.profile_image_url_https);
-	}
+        //  twitterUserURL.push(data.statuses[i].user.profile_image_url_https);
+
+
+    
+
+	 }
 };
+
+twitterText.length = 0;
+twitterUserURL.length=0;
+twitterUser.length=0;
+
+languageDB.on('value', function(snapshot) {
+      snapshot.forEach(function(childSnapshot) {
+      var childData = childSnapshot.val();
+    var childKey = childSnapshot.key;
+    if (childData.lang === twitterLang) {
+           twitterText.push(childData.text);
+          twitterSentimentScore.push(sentiment(childData.text).score);
+         twitterUser.push(childData.user.name);
+         twitterUserURL.push(childData.user.profile_image_url_https);
+                     console.log(twitterText);
+
+       }
+            });
+        });
 
 //rendering results in index.ejs
 	res.render('index', {tweets: twitterText, keyword:params.q , count:params.count ,twitterUser:twitterUser, twitterUserURL:twitterUserURL,twitterSentimentScore:twitterSentimentScore, error: null});

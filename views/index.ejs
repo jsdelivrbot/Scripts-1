@@ -20,7 +20,28 @@
 
 <% include navbar %>
 
-    <div class="container main-page">
+
+<div class="tabs-wrapper"> 
+    <ul class="nav classic-tabs tabs-cyan" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link waves-light active" data-toggle="tab" href="#panel51" role="tab">Tweets</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link waves-light" data-toggle="tab" href="#panel52" role="tab">Charts</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link waves-light" data-toggle="tab" href="#panel53" role="tab">Analysis</a>
+        </li>
+        
+    </ul>
+</div>
+
+<!-- Tab panels -->
+<div class="tab-content card">
+
+    <!--Panel 1-->
+    <div class="tab-pane fade in show active" id="panel51" role="tabpanel">
+         <div class="container main-page">
       <fieldset>
     
  </fieldset>
@@ -81,6 +102,58 @@
     </div>
 
 
+    </div>
+    <!--/.Panel 1-->
+
+    <!--Panel 2-->
+    <div class="tab-pane fade" id="panel52" role="tabpanel">
+        <div id="piechart"></div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript">
+// Load google charts
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawChart);
+
+// Draw the chart and set the chart values
+function drawChart() {
+  var data = google.visualization.arrayToDataTable([
+  ['Sentiment', 'grade'],
+  ['Positive', 8],
+  ['Negative', 2],
+  ['Neutral', 4],
+  
+]);
+
+  // Optional; add a title and set the width and height of the chart
+  var options = {'title':'Tweets Analysis', 'width':1000, 'height':1000};
+
+  // Display the chart inside the <div> element with id="piechart"
+  var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+  chart.draw(data, options);
+}
+</script>
+    </div>
+    <!--/.Panel 2-->
+
+    <!--Panel 3-->
+    <div class="tab-pane fade" id="panel53" role="tabpanel">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil odit magnam minima, soluta doloribus reiciendis molestiae placeat unde eos molestias. Quisquam aperiam, pariatur. Tempora, placeat ratione porro voluptate odit minima.</p>
+
+    </div>
+    <!--/.Panel 3-->
+
+    <!--Panel 4-->
+    <div class="tab-pane fade" id="panel54" role="tabpanel">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil odit magnam minima, soluta doloribus reiciendis molestiae placeat unde eos molestias. Quisquam aperiam, pariatur. Tempora, placeat ratione porro voluptate odit minima.</p>
+
+    </div>
+    <!--/.Panel 4-->
+
+</div>
+
+   
 
 <% include footer %>
 
