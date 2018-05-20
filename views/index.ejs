@@ -80,6 +80,9 @@
                                     <% } %>
                                     <div class="card-body">
                                          <p class="white-text mb-0"><%= twitterSentimentScore[i] %></p>
+                                             
+       
+
                                      </div>
                                 </div>
                         </div>
@@ -95,7 +98,9 @@
                <% } %>
             </div>
 
-        
+        <p id="positive" style="display:none"><%= sortedEmotions.positiveEmotions  %></p>
+                                             <p id="negative" style="display:none"><%= sortedEmotions.negativeEmotions  %></p>
+                                             <p id="neutral" style="display:none"><%= sortedEmotions.neutralEmotions  %></p>
         <% } %>
 
      
@@ -104,36 +109,49 @@
 
     </div>
     <!--/.Panel 1-->
-
+ 
     <!--Panel 2-->
     <div class="tab-pane fade" id="panel52" role="tabpanel">
-        <div id="piechart"></div>
 
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
 
-<script type="text/javascript">
-// Load google charts
-google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var positive = parseInt(document.getElementById("positive").innerHTML);
+        var negative = parseInt(document.getElementById("negative").innerHTML);
+        var neutral =  parseInt(document.getElementById("neutral").innerHTML);
 
-// Draw the chart and set the chart values
-function drawChart() {
-  var data = google.visualization.arrayToDataTable([
-  ['Sentiment', 'grade'],
-  ['Positive', 8],
-  ['Negative', 2],
-  ['Neutral', 4],
+        console.log(positive);
+                console.log(negative);
+        console.log(neutral);
+
+
+        var data = google.visualization.arrayToDataTable([
+          ['Effort', 'Amount given'],
+          ['Positive',positive],
+          ['Negative',negative],
+          ['Neutral',neutral]
+        ]);
+
+        var options = {
+          pieHole: 0.5,
+           width:900,
+          height:500,
+          pieSliceTextStyle: {
+            color: 'black',
+          },
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('donut_single'));
+        chart.draw(data, options);
+      }
+    </script>
   
-]);
+    <div id="donut_single" style="width: 900px; height: 500px;"></div>
 
-  // Optional; add a title and set the width and height of the chart
-  var options = {'title':'Tweets Analysis', 'width':1000, 'height':1000};
 
-  // Display the chart inside the <div> element with id="piechart"
-  var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-  chart.draw(data, options);
-}
-</script>
     </div>
     <!--/.Panel 2-->
 

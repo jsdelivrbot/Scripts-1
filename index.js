@@ -89,10 +89,14 @@ app.get('/', function (req, res) {
 app.post('/' , function(req, res){
 
 
+
+ 
+
+
 var params = {
     q: 'hello',
 	count: 2,
-  //tweet_mode:'extended'
+  tweet_mode:'extended'
 
 	//lang:'en'
 }
@@ -124,7 +128,7 @@ twitterSentimentScore.length = 0 ;
 
 		
 
-		var snetimentScore = sentiment(data.statuses[i].text);
+		var snetimentScore = sentiment(data.statuses[i].full_text + data.statuses[i].text);
 		//console.log(data.statuses[i]);
        // console.log(twitterLang);
 		if (data.statuses[i].lang === twitterLang) {
@@ -145,13 +149,15 @@ twitterText.length = 0;
 twitterUserURL.length=0;
 twitterUser.length=0;
 
+
 languageDB.on('value', function(snapshot) {
       snapshot.forEach(function(childSnapshot) {
       var childData = childSnapshot.val();
     var childKey = childSnapshot.key;
     if (childData.lang === twitterLang) {
-           twitterText.push(childData.text);
-          twitterSentimentScore.push(sentiment(childData.text).score);
+           twitterText.push(childData.full_text + childData.text );
+          twitterSentimentScore.push(sentiment(childData.text + childData.full_text).score);
+
          twitterUser.push(childData.user.name);
          twitterUserURL.push(childData.user.profile_image_url_https);
                      console.log(twitterText);
@@ -160,13 +166,46 @@ languageDB.on('value', function(snapshot) {
             });
         });
 
+          var sortedEmotions = sortEmotions(twitterSentimentScore);
+ var stream = Twitter.stream('statuses/filter', { track: params.q })
+ 
+stream.on('tweet', function (tweet) {
+  console.log(tweet)
+})
+
+
+
+
 //rendering results in index.ejs
-	res.render('index', {tweets: twitterText, keyword:params.q , count:params.count ,twitterUser:twitterUser, twitterUserURL:twitterUserURL,twitterSentimentScore:twitterSentimentScore, error: null});
+	res.render('index', {tweets: twitterText, keyword:params.q , count:params.count ,twitterUser:twitterUser, twitterUserURL:twitterUserURL,twitterSentimentScore:twitterSentimentScore,sortedEmotions:sortedEmotions,error: null});
 
 
 }   
 })
  
+
+function sortEmotions(emotionsArray){
+  var sortedEmotions = {
+ positiveEmotions : 0,
+ neutralEmotions : 0,
+ negativeEmotions : 0
+};
+
+for (var i = 0; i <=emotionsArray.length; i++) {
+if (emotionsArray[i]>0) {
+  sortedEmotions.positiveEmotions++;
+} else if (emotionsArray[i]<0){
+  sortedEmotions.negativeEmotions++;
+}else{
+  sortedEmotions.neutralEmotions++;
+}
+}
+
+return sortedEmotions;
+
+}
+
+
 
 
 //Running the server
