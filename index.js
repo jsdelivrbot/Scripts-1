@@ -63,8 +63,7 @@ var port = process.env.PORT || 8000
 //declaring the searching parameters
 var params = {
     q: 'hello',
-	count: 2,
-	//lang:'en'
+  tweet_mode:'extended'
 }
 
 
@@ -90,15 +89,13 @@ app.post('/' , function(req, res){
 
 
 
- 
+
 
 
 var params = {
     q: 'hello',
 	count: 2,
   tweet_mode:'extended'
-
-	//lang:'en'
 }
 
 	 params.q = req.body.keyword;
@@ -120,30 +117,18 @@ Twitter.get('search/tweets',params, gotData);
 
 function gotData(err,data,response){
 
-
+//write to db
 twitterSentimentScore.length = 0 ;
-	for (var i = 0; i < data.statuses.length; i++) {
+	for (var i = 0; i < params.count; i++) {
 		console.log('franc');
          var languageDB = tweetsRef.child(params.q);
 
-		
-
-		var snetimentScore = sentiment(data.statuses[i].full_text + data.statuses[i].text);
-		//console.log(data.statuses[i]);
-       // console.log(twitterLang);
-		if (data.statuses[i].lang === twitterLang) {
-            // if(data.statuses[i].id)
+			if (data.statuses[i].lang === twitterLang) {
          languageDB.child(data.statuses[i].id).set(data.statuses[i]);
-	       //  twitterText.push(data.statuses[i].text);
-	       // twitterSentimentScore.push(snetimentScore.score);
-	       // twitterUser.push(data.statuses[i].user.name);
-        //  twitterUserURL.push(data.statuses[i].user.profile_image_url_https);
-
-
-    
-
 	 }
 };
+
+
 
 twitterText.length = 0;
 twitterUserURL.length=0;
@@ -154,24 +139,40 @@ languageDB.on('value', function(snapshot) {
       snapshot.forEach(function(childSnapshot) {
       var childData = childSnapshot.val();
     var childKey = childSnapshot.key;
+if(twitterText.length >= params.count){
+    return true;
+
+}
     if (childData.lang === twitterLang) {
-           twitterText.push(childData.full_text + childData.text );
-          twitterSentimentScore.push(sentiment(childData.text + childData.full_text).score);
+if(childData.full_text != undefined){
+     twitterText.push(childData.full_text);
+   twitterSentimentScore.push(sentiment(childData.full_text).score);
+}else{
+   twitterSentimentScore.push(sentiment(childData.text).score);
+      twitterText.push(childData.text);
+
+}
+
+         
 
          twitterUser.push(childData.user.name);
          twitterUserURL.push(childData.user.profile_image_url_https);
-                     console.log(twitterText);
 
        }
+     
             });
+
         });
 
           var sortedEmotions = sortEmotions(twitterSentimentScore);
- var stream = Twitter.stream('statuses/filter', { track: params.q })
- 
-stream.on('tweet', function (tweet) {
-  console.log(tweet)
-})
+
+
+
+
+//  var stream = Twitter.stream('statuses/filter', { track: params.q })
+// stream.on('tweet', function (tweet) {
+//   console.log(tweet)
+// })
 
 
 
