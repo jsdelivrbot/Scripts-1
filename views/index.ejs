@@ -71,7 +71,7 @@
                             <h4 class="card-title"><%= twitterUser[i] %></h4>
                             <hr>
                             <!--Quotation-->
-                            <p><i class="fa fa-quote-left"></i> <%= tweets[i] %></p>
+                            <p class="card-text"><i class="fa fa-quote-left"></i> <%= tweets[i] %></p>
                             <!--EMOTOTION SCORE-->
                              <% if(twitterSentimentScore[i]<0){ %>
                                 <div class="card pink lighten-2 text-center z-depth-2">
@@ -80,8 +80,14 @@
                                     <% } %>
                                     <div class="card-body">
                                          <p class="white-text mb-0"><%= twitterSentimentScore[i] %></p>
-                                             
-       
+                                         <%if(twitterPositive.length>0){%>
+                                         <%console.log(twitterPositive)%>
+                                        <p id="positiveWords"><%=twitterPositive.join("|")%></p>
+                                        <%}%>
+                                        <%if(twitterNegative.length>0){%>
+                                         <p id="negativeWords"><%=twitterNegative.join("|")%></p>
+                                        <%}%>
+
 
                                      </div>
                                 </div>
@@ -184,7 +190,7 @@
                             <h4 class="card-title"><%= twitterUser[i] %></h4>
                             <hr>
                             <!--Quotation-->
-                            <p><i class="fa fa-quote-left"></i> <%= tweets[i] %></p>
+                            <p class="card-text"><i class="fa fa-quote-left"></i> <%= tweets[i] %></p>
                             <!--EMOTOTION SCORE-->
                              <% if(twitterSentimentScore[i]<0){ %>
                                 <div class="card pink lighten-2 text-center z-depth-2">
@@ -234,7 +240,7 @@
                             <h4 class="card-title"><%= twitterUser[i] %></h4>
                             <hr>
                             <!--Quotation-->
-                            <p><i class="fa fa-quote-left"></i> <%= tweets[i] %></p>
+                            <p class="card-text"><i class="fa fa-quote-left"></i> <%= tweets[i] %></p>
                             <!--EMOTOTION SCORE-->
                              <% if(twitterSentimentScore[i]<0){ %>
                                 <div class="card pink lighten-2 text-center z-depth-2">
@@ -243,8 +249,8 @@
                                     <% } %>
                                     <div class="card-body">
                                          <p class="white-text mb-0"><%= twitterSentimentScore[i] %></p>
-                                             
-       
+
+
 
                                      </div>
                                 </div>
@@ -264,6 +270,33 @@
 
 
  </div>
+
+
+<script>
+$(document).ready(function(){
+  var words =  $("#negativeWords").text();
+var regexp = new RegExp('\\b ('+words+')', 'g');
+  console.log(regexp);
+  var replaceWith = '<span class="badge badge-pill red">$1</span>'; // wrap in the tag you want
+  $('.card-text').each(function(){
+    $(this).html($(this).html().replace(regexp,replaceWith));
+  });
+});
+
+
+$(document).ready(function(){
+  var words =  $("#positiveWords").text();
+var regexp = new RegExp('\\b ('+words+')', 'g');
+  console.log(regexp);
+  var replaceWith = '<span class="badge badge-pill green">$1</span>'; // wrap in the tag you want
+  $('.card-text').each(function(){
+    $(this).html($(this).html().replace(regexp,replaceWith));
+  });
+});
+</script>
+
+
+
     </div>
     <!--/.Panel 3-->
 

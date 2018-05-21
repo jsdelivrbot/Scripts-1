@@ -47,6 +47,8 @@ var twitterText = [];
 var twitterUser = [];
 var twitterUserURL =[];
 var twitterSentimentScore = [];
+var twitterPositive = [];
+var twitterNegative = [];
 var twitterLang;
 var keyword= null;
 var rsx=[];
@@ -119,9 +121,16 @@ function gotData(err,data,response){
 
 //write to db
 twitterSentimentScore.length = 0 ;
+twitterPositive.length = 0;
+twitterNegative.length = 0;
+
+
 	for (var i = 0; i < params.count; i++) {
 		console.log('franc');
          var languageDB = tweetsRef.child(params.q);
+
+
+
 
 			if (data.statuses[i].lang === twitterLang) {
          languageDB.child(data.statuses[i].id).set(data.statuses[i]);
@@ -133,6 +142,8 @@ twitterSentimentScore.length = 0 ;
 twitterText.length = 0;
 twitterUserURL.length=0;
 twitterUser.length=0;
+twitterPositive.length = 0;
+twitterNegative.length = 0;
 
 
 languageDB.on('value', function(snapshot) {
@@ -146,10 +157,24 @@ if(twitterText.length >= params.count){
     if (childData.lang === twitterLang) {
 if(childData.full_text != undefined){
      twitterText.push(childData.full_text);
-   twitterSentimentScore.push(sentiment(childData.full_text).score);
+        twitterSentimentScore.push(sentiment(childData.full_text).score);
+   twitterNegative.push(sentiment(childData.full_text).negative.join("|"));
+    twitterNegative = twitterNegative.filter(v=>v!='');
+        twitterPositive.push(sentiment(childData.full_text).positive.join("|"));
+        twitterPositive = twitterPositive.filter(v=>v!='');
+       
+      console.log(sentiment(childData.full_text).log);
+
 }else{
    twitterSentimentScore.push(sentiment(childData.text).score);
       twitterText.push(childData.text);
+         twitterNegative.push(sentiment(childData.text).negative.join("|"));
+         twitterNegative = twitterNegative.filter(v=>v!='');
+        twitterPositive.push(sentiment(childData.text).positive.join("|"));
+        twitterPositive = twitterPositive.filter(v=>v!='');
+
+      console.log(sentiment(childData.full_text).log);
+
 
 }
 
@@ -178,8 +203,9 @@ if(childData.full_text != undefined){
 
 
 //rendering results in index.ejs
-	res.render('index', {tweets: twitterText, keyword:params.q , count:params.count ,twitterUser:twitterUser, twitterUserURL:twitterUserURL,twitterSentimentScore:twitterSentimentScore,sortedEmotions:sortedEmotions,error: null});
-
+	res.render('index', {tweets: twitterText, keyword:params.q , count:params.count ,twitterUser:twitterUser, twitterUserURL:twitterUserURL,twitterSentimentScore:twitterSentimentScore,sortedEmotions:sortedEmotions,twitterNegative:twitterNegative,twitterPositive:twitterPositive,error: null});
+twitterPositive.length = 0;
+twitterNegative.length = 0;
 
 }   
 })
