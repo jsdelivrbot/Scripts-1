@@ -22,3 +22,9 @@
 		margin-top: 10%;
 
 }
+
+#positiveTweets{
+	border-right: 1px black solid;
+		text-align: center !important;
+
+}
