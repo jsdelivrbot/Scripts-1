@@ -163,6 +163,7 @@
           <h3 class="display-3 text-center">Positive Tweets</h3>
 
     <div class="row">
+      <% if(tweets !== null){ %>
  <% for (var i = 0; i <= tweets.length; i++) { %>
 <%if (twitterSentimentScore[i]>0) { %>
                 <!--Grid column-->
@@ -201,12 +202,15 @@
                 <!--Grid column-->
                <% } %>
                <% } %>
+                              <% } %>
+
             </div>
           </div>
   <div class="col-md-6" id="negativeTweets" >
                 <h3 class="display-3 text-center">Negative Tweets</h3>
 
     <div class="row">
+            <% if(tweets !== null){ %>
  <% for (var i = 0; i <= tweets.length; i++) { %>
 <%if (twitterSentimentScore[i]<0) { %>
 
@@ -251,7 +255,7 @@
 
                 </div>
                 <!--Grid column-->
-               <% } %>  <% } %>
+               <% } %>  <% } %> <% } %>
              </div>
           </div>
 
