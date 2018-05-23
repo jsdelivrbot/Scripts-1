@@ -134,7 +134,6 @@ twitterNegative.push(sentiment(data.statuses[i].text).negative.join("|"));
 
   	 }
 };
- console.log("ass"+fullTwitterText);
 
 
           var sortedEmotions = sortEmotions(twitterSentimentScore);

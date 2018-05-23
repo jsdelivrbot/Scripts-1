@@ -305,6 +305,8 @@ var regexp = new RegExp('\\b ('+words+')', 'g');
 
     <!--Panel 4-->
     <div class="tab-pane fade" id="panel54" role="tabpanel">
+      <canvas id="myChart"></canvas>
+
 <div id="tweetsText">
  </div>
 
@@ -314,18 +316,50 @@ var regexp = new RegExp('\\b ('+words+')', 'g');
 </div>
 
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
+
+</script>
+<script>
+
+var ctx = document.getElementById('myChart').getContext('2d');
+var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: [],
+        datasets: [{
+            label: "My First dataset",
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: [],
+        }]
+    },
+
+    // Configuration options go here
+    options: {}
+});
+
+
   var tweetNR = 0 ;
   var socket = io.connect('http://localhost:8000');
   socket.on('tweets', function (data) {
 if (tweetNR<10) {
+            tweetNR++;
   tweets = document.getElementById("tweetsText");
           tweets.innerHTML = `<div id="tweetNR`+ tweetNR+`" class="alert alert-dark">`+data.tweet.text+'|'+data.emotions.score+`</div>` + tweets.innerHTML ;
-          tweetNR++;
+ chart.data.datasets[0].data.push(data.emotions.score);
+  chart.data.labels.push(data.tweet.created_at);
+  chart.update();
+  if(chart.data.labels.length>10){chart.data.labels.shift();
+    chart.data.datasets[0].data.shift();}
 
-    console.log(data);
+
+
+    console.log(chart.data);
 }else{
 
 $('#tweetsText').children().last().remove();
