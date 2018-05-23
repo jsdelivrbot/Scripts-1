@@ -82,10 +82,10 @@
                                          <p class="white-text mb-0"><%= twitterSentimentScore[i] %></p>
                                          <%if(twitterPositive.length>0){%>
                                          <%console.log(twitterPositive)%>
-                                        <p id="positiveWords"><%=twitterPositive.join("|")%></p>
+                                        <p id="positiveWords" style="display:none"><%=twitterPositive.join("|")%></p>
                                         <%}%>
                                         <%if(twitterNegative.length>0){%>
-                                         <p id="negativeWords"><%=twitterNegative.join("|")%></p>
+                                         <p id="negativeWords" style="display:none"><%=twitterNegative.join("|")%></p>
                                         <%}%>
 
 
@@ -309,6 +309,15 @@ var regexp = new RegExp('\\b ('+words+')', 'g');
 
 </div>
 
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io.connect('http://localhost:8000');
+  socket.on('tweets', function (data) {
+    console.log(data);
+  });
+</script>
    
 
 <% include footer %>

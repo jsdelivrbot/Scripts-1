@@ -6,37 +6,21 @@ const bodyParser = require('body-parser');
 const request = require('request');
 const sentiment = require('sentiment');
 const app = express()
-var firebase = require("firebase-admin");
+var server = require('http').createServer(app);  
+var io = require('socket.io')(server);
 
 
 
 
 
-  var config = {
-    // apiKey: "AIzaSyCIFo1xJpg-jdSmRK8dCSOUeahJsM1pgaA",
-    // authDomain: "sentiment-analisis-twitter.firebaseapp.com",
-    serviceAccount : "./sentiment-analisis-twitter-firebase-adminsdk-i6qim-d7b5b2f868.json",
-    databaseURL: "https://sentiment-analisis-twitter.firebaseio.com",
-    credential: {
-      getAccessToken: () => ({
-        expires_in: 0,
-        access_token: '',
-      }),
-    }
 
-    // projectId: "sentiment-analisis-twitter",
-    // storageBucket: "sentiment-analisis-twitter.appspot.com",
-    // messagingSenderId: "692009161137
-      };
-  firebase.initializeApp(config);
-  console.log(firebase);
+  
 // var rootRef = firebase.database().ref().child('sentiment-analisis-twitter');
-var tweetsRef = firebase.database().ref().child('tweets');
 
 //setting  up express and ejs 
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.set('view engine', 'ejs')
+app.set('view engine', 'ejs');
 
 //seting up Twit
 var twit = require('twit'),
@@ -52,6 +36,7 @@ var twitterNegative = [];
 var twitterLang;
 var keyword= null;
 var rsx=[];
+var fullTwitterText="";
 
 
 var port = process.env.PORT || 8000
@@ -65,16 +50,10 @@ var port = process.env.PORT || 8000
 //declaring the searching parameters
 var params = {
     q: 'hello',
-  tweet_mode:'extended'
+  tweet_mode:'extended',
+    tweet_mode:'extended'
+
 }
-
-
-
-
-
-
-
-
 
 
 //GET function
@@ -84,12 +63,8 @@ app.get('/', function (req, res) {
 })
 
 
-
-
 //POST function 
 app.post('/' , function(req, res){
-
-
 
 
 
@@ -123,22 +98,6 @@ function gotData(err,data,response){
 twitterSentimentScore.length = 0 ;
 twitterPositive.length = 0;
 twitterNegative.length = 0;
-
-
-	for (var i = 0; i < params.count; i++) {
-		console.log('franc');
-         var languageDB = tweetsRef.child(params.q);
-
-
-
-
-			if (data.statuses[i].lang === twitterLang) {
-         languageDB.child(data.statuses[i].id).set(data.statuses[i]);
-	 }
-};
-
-
-
 twitterText.length = 0;
 twitterUserURL.length=0;
 twitterUser.length=0;
@@ -146,58 +105,75 @@ twitterPositive.length = 0;
 twitterNegative.length = 0;
 
 
-languageDB.on('value', function(snapshot) {
-      snapshot.forEach(function(childSnapshot) {
-      var childData = childSnapshot.val();
-    var childKey = childSnapshot.key;
-if(twitterText.length >= params.count){
-    return true;
-
-}
-    if (childData.lang === twitterLang) {
-if(childData.full_text != undefined){
-     twitterText.push(childData.full_text);
-        twitterSentimentScore.push(sentiment(childData.full_text).score);
-   twitterNegative.push(sentiment(childData.full_text).negative.join("|"));
+	for (var i = 0; i < params.count; i++) {
+			if (data.statuses[i].lang === twitterLang) {
+        if(data.statuses[i].full_text != undefined){
+  twitterText.push(data.statuses[i].full_text);
+  fullTwitterText.concat(fullTwitterText,data.statuses[i].full_text);
+  twitterSentimentScore.push(sentiment(data.statuses[i].full_text).score);
+  twitterUser.push(data.statuses[i].user.name);
+  twitterUserURL.push(data.statuses[i].user.profile_image_url_https);
+twitterNegative.push(sentiment(data.statuses[i].full_text).negative.join("|"));
     twitterNegative = twitterNegative.filter(v=>v!='');
-        twitterPositive.push(sentiment(childData.full_text).positive.join("|"));
+        twitterPositive.push(sentiment(data.statuses[i].full_text).positive.join("|"));
         twitterPositive = twitterPositive.filter(v=>v!='');
-       
-      console.log(sentiment(childData.full_text).log);
+    }else{
+  twitterText.push(data.statuses[i].text);
+    fullTwitterText.concat(fullTwitterText,data.statuses[i].text);
 
-}else{
-   twitterSentimentScore.push(sentiment(childData.text).score);
-      twitterText.push(childData.text);
-         twitterNegative.push(sentiment(childData.text).negative.join("|"));
-         twitterNegative = twitterNegative.filter(v=>v!='');
-        twitterPositive.push(sentiment(childData.text).positive.join("|"));
+  twitterSentimentScore.push(sentiment(data.statuses[i].text).score);
+  twitterUser.push(data.statuses[i].user.name);
+  twitterUserURL.push(data.statuses[i].user.profile_image_url_https);
+twitterNegative.push(sentiment(data.statuses[i].text).negative.join("|"));
+    twitterNegative = twitterNegative.filter(v=>v!='');
+        twitterPositive.push(sentiment(data.statuses[i].text).positive.join("|"));
         twitterPositive = twitterPositive.filter(v=>v!='');
 
-      console.log(sentiment(childData.full_text).log);
 
+  }
 
-}
+  	 }
+};
+ console.log("ass"+fullTwitterText);
 
-         
-
-         twitterUser.push(childData.user.name);
-         twitterUserURL.push(childData.user.profile_image_url_https);
-
-       }
-     
-            });
-
-        });
 
           var sortedEmotions = sortEmotions(twitterSentimentScore);
 
 
 
+ var stream = Twitter.stream('statuses/filter', { track: params.q })
+stream.on('stream', function (stream) {
+io.sockets.emit('tweets', stream.text); 
+console.log(stream.text);
+});
 
-//  var stream = Twitter.stream('statuses/filter', { track: params.q })
-// stream.on('tweet', function (tweet) {
-//   console.log(tweet)
-// })
+
+
+
+function nthMostCommon(string, ammount) {
+    var wordsArray = string.split(/\s/);
+    var wordOccurrences = {}
+    for (var i = 0; i < wordsArray.length; i++) {
+        wordOccurrences['_'+wordsArray[i]] = ( wordOccurrences['_'+wordsArray[i]] || 0 ) + 1;
+    }
+    var result = Object.keys(wordOccurrences).reduce(function(acc, currentKey) {
+        /* you may want to include a binary search here */
+        for (var i = 0; i < ammount; i++) {
+            if (!acc[i]) {
+                acc[i] = { word: currentKey.slice(1, currentKey.length), occurences: wordOccurrences[currentKey] };
+                break;
+            } else if (acc[i].occurences < wordOccurrences[currentKey]) {
+                acc.splice(i, 0, { word: currentKey.slice(1, currentKey.length), occurences: wordOccurrences[currentKey] });
+                if (acc.length > ammount)
+                    acc.pop();
+                break;
+            }
+        }
+        return acc;
+    }, []);
+    return result;
+}
+
 
 
 
@@ -209,6 +185,11 @@ twitterNegative.length = 0;
 
 }   
 })
+
+
+
+
+
  
 
 function sortEmotions(emotionsArray){
@@ -236,7 +217,7 @@ return sortedEmotions;
 
 
 //Running the server
-app.listen(port, function () {
+server.listen(port, function () {
   console.log(' app listening on port 8000!')
 })
 
