@@ -32,6 +32,9 @@
         <li class="nav-item">
             <a class="nav-link waves-light" data-toggle="tab" href="#panel53" role="tab">Analysis</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link waves-light" data-toggle="tab" href="#panel54" role="tab">Stream</a>
+        </li>
         
     </ul>
 </div>
@@ -302,7 +305,8 @@ var regexp = new RegExp('\\b ('+words+')', 'g');
 
     <!--Panel 4-->
     <div class="tab-pane fade" id="panel54" role="tabpanel">
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil odit magnam minima, soluta doloribus reiciendis molestiae placeat unde eos molestias. Quisquam aperiam, pariatur. Tempora, placeat ratione porro voluptate odit minima.</p>
+<div id="tweetsText">
+ </div>
 
     </div>
     <!--/.Panel 4-->
@@ -313,10 +317,24 @@ var regexp = new RegExp('\\b ('+words+')', 'g');
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
+  var tweetNR = 0 ;
   var socket = io.connect('http://localhost:8000');
   socket.on('tweets', function (data) {
+if (tweetNR<10) {
+  tweets = document.getElementById("tweetsText");
+          tweets.innerHTML = `<div id="tweetNR`+ tweetNR+`" class="alert alert-dark">`+data.tweet.text+'|'+data.emotions.score+`</div>` + tweets.innerHTML ;
+          tweetNR++;
+
     console.log(data);
+}else{
+
+$('#tweetsText').children().last().remove();
+tweetNR--
+  };
   });
+
+
+
 </script>
    
 

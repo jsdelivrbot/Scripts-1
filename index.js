@@ -141,11 +141,7 @@ twitterNegative.push(sentiment(data.statuses[i].text).negative.join("|"));
 
 
 
- var stream = Twitter.stream('statuses/filter', { track: params.q })
-stream.on('stream', function (stream) {
-io.sockets.emit('tweets', stream.text); 
-console.log(stream.text);
-});
+
 
 
 
@@ -175,6 +171,17 @@ function nthMostCommon(string, ammount) {
 }
 
 
+var stream = Twitter.stream('statuses/filter', { track: params.q })
+ 
+stream.on('tweet', function (tweet) {
+  var tweetObject = {
+    tweet:tweet,
+    emotions:sentiment(tweet.text)
+  }
+  io.sockets.emit('tweets', tweetObject); 
+
+  console.log(tweet)
+})
 
 
 
