@@ -1,0 +1,136 @@
+<div class="tab-pane fade" id="panel53" role="tabpanel">
+<div class= "row">
+
+  <div class="col-md-6" id="positiveTweets" >
+          <h3 class="display-3 text-center">Positive Tweets</h3>
+
+    <div class="row">
+      <% if(tweets !== null){ %>
+ <% for (var i = 0; i <= tweets.length; i++) { %>
+<%if (twitterSentimentScore[i]>0) { %>
+                <!--Grid column-->
+                <div class="col-md-6 mb-12">
+                    <!--Card-->
+                    <div class="card testimonial-card">
+                        <!--Bacground color-->
+                        <div class="card-up color-block aqua-gradient z-depth-2">
+                        </div>
+
+                        <!--Avatar-->
+                        <div class="avatar mx-auto white">
+                            <img src="<%= twitterUserURL[i] %>" class="rounded-circle">
+                        </div>
+
+                        <div class="card-body">
+                            <!--Name-->
+                            <h4 class="card-title"><%= twitterUser[i] %></h4>
+                            <hr>
+                            <!--Quotation-->
+                            <p class="card-text"><i class="fa fa-quote-left"></i> <%= tweets[i] %></p>
+                            <!--EMOTOTION SCORE-->
+                             <% if(twitterSentimentScore[i]<0){ %>
+                                <div class="card pink lighten-2 text-center z-depth-2">
+                                    <% } else{ %> 
+                                 <div class="card info-color text-center z-depth-2">
+                                    <% } %>
+                                    <div class="card-body">
+                                         <p class="white-text mb-0"><%= twitterSentimentScore[i] %></p>                                  
+                                     </div>
+                                </div>
+                        </div>
+                    </div>
+                    <!--/.Card-->
+                </div>
+                <!--Grid column-->
+               <% } %>
+               <% } %>
+                              <% } %>
+
+            </div>
+          </div>
+  <div class="col-md-6" id="negativeTweets" >
+                <h3 class="display-3 text-center">Negative Tweets</h3>
+
+    <div class="row">
+            <% if(tweets !== null){ %>
+ <% for (var i = 0; i <= tweets.length; i++) { %>
+<%if (twitterSentimentScore[i]<0) { %>
+
+                <!--Grid column-->
+                <div class="col-md-6 mb-12">
+
+                    <!--Card-->
+                    <div class="card testimonial-card">
+
+                        <!--Bacground color-->
+                        <div class="card-up color-block aqua-gradient z-depth-2">
+                        </div>
+
+                        <!--Avatar-->
+                        <div class="avatar mx-auto white">
+                            <img src="<%= twitterUserURL[i] %>" class="rounded-circle">
+                        </div>
+
+                        <div class="card-body">
+                            <!--Name-->
+                            <h4 class="card-title"><%= twitterUser[i] %></h4>
+                            <hr>
+                            <!--Quotation-->
+                            <p class="card-text"><i class="fa fa-quote-left"></i> <%= tweets[i] %></p>
+                            <!--EMOTOTION SCORE-->
+                             <% if(twitterSentimentScore[i]<0){ %>
+                                <div class="card pink lighten-2 text-center z-depth-2">
+                                    <% } else{ %> 
+                                 <div class="card info-color text-center z-depth-2">
+                                    <% } %>
+                                    <div class="card-body">
+                                         <p class="white-text mb-0"><%= twitterSentimentScore[i] %></p>
+
+
+
+                                     </div>
+                                </div>
+                        </div>
+
+                    </div>
+                    <!--/.Card-->
+
+                </div>
+                <!--Grid column-->
+               <% } %>  <% } %> <% } %>
+             </div>
+          </div>
+
+
+
+
+
+ </div>
+
+
+<script>
+$(document).ready(function(){
+  var words =  $("#negativeWords").text();
+var regexp = new RegExp('\\b ('+words+')', 'g');
+  console.log(regexp);
+  var replaceWith = '<span class="badge badge-pill red">$1</span>'; // wrap in the tag you want
+  $('.card-text').each(function(){
+    $(this).html($(this).html().replace(regexp,replaceWith));
+  });
+});
+
+
+$(document).ready(function(){
+  var words =  $("#positiveWords").text();
+var regexp = new RegExp('\\b ('+words+')', 'g');
+  console.log(regexp);
+  var replaceWith = '<span class="badge badge-pill green">$1</span>'; // wrap in the tag you want
+  $('.card-text').each(function(){
+    $(this).html($(this).html().replace(regexp,replaceWith));
+  });
+});
+</script>
+
+
+
+    </div>
