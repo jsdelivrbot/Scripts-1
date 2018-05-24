@@ -51,7 +51,6 @@ var port = process.env.PORT || 8000
 var params = {
     q: 'hello',
   tweet_mode:'extended',
-    tweet_mode:'extended'
 
 }
 
@@ -59,7 +58,6 @@ var params = {
 //GET function
 app.get('/', function (req, res) {
     res.render('index', {tweets: null, error: null});
-
 })
 
 
@@ -70,8 +68,8 @@ app.post('/' , function(req, res){
 
 
 var params = {
-    q: 'hello',
-	count: 2,
+    q: '',
+	count: 0,
   tweet_mode:'extended'
 }
 
@@ -104,10 +102,10 @@ twitterUser.length=0;
 twitterPositive.length = 0;
 twitterNegative.length = 0;
 
-
 	for (var i = 0; i < params.count; i++) {
 			if (data.statuses[i].lang === twitterLang) {
         if(data.statuses[i].full_text != undefined){
+          console.log(sentiment(data.statuses[i].full_text));
   twitterText.push(data.statuses[i].full_text);
   fullTwitterText.concat(fullTwitterText,data.statuses[i].full_text);
   twitterSentimentScore.push(sentiment(data.statuses[i].full_text).score);
