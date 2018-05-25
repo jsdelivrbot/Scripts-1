@@ -1,4 +1,14 @@
 <div class="tab-pane fade" id="panel52" role="tabpanel">
+<div id="tweemotions" style="display:none"><%=twitterSentimentScore%></div>
+
+<div class="row">
+        <div id="chart_div" class='col-6'><canvas id="staticChart"></canvas></div> 
+
+    <div id="donut_single" class='col-5' ></div>
+</div>
+
+
+
 
          <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
@@ -16,7 +26,7 @@
 
 
         var data = google.visualization.arrayToDataTable([
-          ['Effort', 'Amount given'],
+          ['Emotion', 'Amount'],
           ['Positive',positive],
           ['Negative',negative],
           ['Neutral',neutral]
@@ -35,9 +45,35 @@
         chart.draw(data, options);
       }
     </script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<script>
+var ctx = document.getElementById('staticChart').getContext('2d');
+var myBarChart = new Chart(ctx, {
+type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+            label: "Tweets",
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: [1,2,4,5],
+        }]
+    },
+
+    // Configuration options go here
+    options: {}
+});
+
+
+
+</script>
+
+
+
+
     
-  
-    <div id="donut_single" style="width: 900px; height: 500px;"></div>
 
 
     </div>
